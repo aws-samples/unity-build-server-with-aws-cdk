@@ -1,0 +1,8 @@
+#cloud-config
+fqdn: unitylicenseserver.ec2.internal
+
+runcmd:
+  - |
+    #!/bin/bash
+    yum -y update
+    yum -y install jq
