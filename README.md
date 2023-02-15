@@ -272,3 +272,11 @@ npx cdk destroy --all
 Q1: How to renew the Unity Build Server license?
 
 Answer: Download licenses from Unity ID Portal and import them again. See also [this website](https://support.unity.com/hc/en-us/articles/5041642079636) for more detailed information.
+
+## Security
+
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
+## License
+
+This library is licensed under the MIT-0 License. See the LICENSE file.
