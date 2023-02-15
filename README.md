@@ -21,7 +21,7 @@ This repository includes the following samples.
 
 * [Node.js](https://nodejs.org/en/download/)
   * v16 or higher is recommended
-* [AWS CLI](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/getting-started-install.html)
+* [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)  ([View this page in Japanese](https://docs.aws.amazon.com/ja_jp/cli/latest/userguide/getting-started-install.html))
   * v2 is recommended
 * Valid unassigned [Unity Build Server License](https://unity.com/products/unity-build-server)
   * Free trial licenses are recommended in PoC
