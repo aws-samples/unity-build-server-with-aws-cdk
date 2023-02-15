@@ -1,6 +1,6 @@
 # Unity Build Server with AWS CDK
 
-[View this page in Japanese 日本語版](./docs/deployment_ja.md)
+[View this page in Japanese (日本語版)](./docs/deployment_ja.md)
 
 ## Overview
 
