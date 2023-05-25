@@ -7,10 +7,11 @@ import { UnityLicenseServer } from './construct/unity-license-server';
 
 interface UnityLicenseServerStackProps extends cdk.StackProps {
   readonly licenseServerAmiId?: string;
+  readonly vpcId?: string;
 }
 
 export class UnityLicenseServerStack extends cdk.Stack {
-  public readonly vpc: ec2.Vpc;
+  public readonly vpc: ec2.IVpc;
   public readonly eni: ec2.CfnNetworkInterface;
   public readonly bucket: s3.Bucket;
 
@@ -25,18 +26,19 @@ export class UnityLicenseServerStack extends cdk.Stack {
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     });
 
-    const vpc = new ec2.Vpc(this, 'Vpc', {
-      gatewayEndpoints: {
-        S3: {
-          service: ec2.GatewayVpcEndpointAwsService.S3,
+    let vpc: ec2.IVpc;
+    if (props.vpcId == null) {
+      vpc = new ec2.Vpc(this, 'Vpc', {
+        gatewayEndpoints: {
+          S3: {
+            service: ec2.GatewayVpcEndpointAwsService.S3,
+          },
         },
-      },
-    });
-    vpc.addFlowLog('FlowLogs', {
-      destination: ec2.FlowLogDestination.toS3(
-        logBucket, 'vpc-flow-logs')
-    });
-    vpc.node.findChild("FlowLogs").node.findChild("FlowLog").node.addDependency(logBucket);
+      });
+      vpc.addFlowLog('FlowLogs', { destination: ec2.FlowLogDestination.toS3(logBucket, 'vpc-flow-logs') });
+    } else {
+      vpc = ec2.Vpc.fromLookup(this, 'Vpc', { vpcId: props.vpcId });
+    }
 
     const eniSecurityGroup = new ec2.SecurityGroup(this, 'EniSecurityGroup', {
       vpc,
@@ -77,7 +79,7 @@ export class UnityLicenseServerStack extends cdk.Stack {
     // URL for the S3 Bucket
     new cdk.CfnOutput(this, 'S3BucketUrl', {
       value: `https://s3.console.aws.amazon.com/s3/buckets/${bucket.bucketName}`,
-    })
+    });
 
     this.vpc = vpc;
     this.eni = eni;
