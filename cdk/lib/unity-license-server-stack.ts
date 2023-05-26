@@ -42,7 +42,6 @@ export class UnityLicenseServerStack extends cdk.Stack {
 
     const eniSecurityGroup = new ec2.SecurityGroup(this, 'EniSecurityGroup', {
       vpc,
-      securityGroupName: 'LicenseServerEniSecurityGroup',
       allowAllOutbound: true,
     });
     eniSecurityGroup.connections.allowFrom(ec2.Peer.ipv4(vpc.vpcCidrBlock), ec2.Port.tcp(8080), 'Allow TCP 8080');

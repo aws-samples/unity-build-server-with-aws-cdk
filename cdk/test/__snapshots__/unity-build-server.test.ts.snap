@@ -330,7 +330,6 @@ exports[`UnityLicenseServerStack test 1`] = `
     "EniSecurityGroup38D1F46C": {
       "Properties": {
         "GroupDescription": "UnityLicenseServerStack/EniSecurityGroup",
-        "GroupName": "LicenseServerEniSecurityGroup",
         "SecurityGroupEgress": [
           {
             "CidrIp": "0.0.0.0/0",
