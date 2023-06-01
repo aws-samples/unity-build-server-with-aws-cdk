@@ -358,6 +358,7 @@ exports[`UnityLicenseServerStack test 1`] = `
       "Type": "AWS::EC2::SecurityGroup",
     },
     "LicenseServerEni": {
+      "DeletionPolicy": "Retain",
       "Properties": {
         "GroupSet": [
           {
@@ -378,6 +379,7 @@ exports[`UnityLicenseServerStack test 1`] = `
         ],
       },
       "Type": "AWS::EC2::NetworkInterface",
+      "UpdateReplacePolicy": "Retain",
     },
     "LogBucketAutoDeleteObjectsCustomResource7762F42C": {
       "DeletionPolicy": "Delete",
