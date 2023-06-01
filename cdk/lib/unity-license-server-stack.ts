@@ -56,6 +56,7 @@ export class UnityLicenseServerStack extends cdk.Stack {
         },
       ],
     });
+    eni.applyRemovalPolicy(RemovalPolicy.RETAIN);
 
     const bucket = new s3.Bucket(this, 'Bucket', {
       removalPolicy: RemovalPolicy.DESTROY,
