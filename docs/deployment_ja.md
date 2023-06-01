@@ -125,8 +125,8 @@ echo '{
 ```diff
 const serverStack = new UnityLicenseServerStack(app, 'UnityLicenseServerStack', {
   env,
--  retainEni: false,
-+  retainEni: true,
+-  retainEni: true,
++  retainEni: false,
 });
 ```
 

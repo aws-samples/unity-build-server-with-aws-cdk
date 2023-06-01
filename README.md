@@ -268,8 +268,8 @@ First, you have to change the removal policy of your ENI. You can do this easily
 ```diff
 const serverStack = new UnityLicenseServerStack(app, 'UnityLicenseServerStack', {
   env,
--  retainEni: false,
-+  retainEni: true,
+-  retainEni: true,
++  retainEni: false,
 });
 ```
 
