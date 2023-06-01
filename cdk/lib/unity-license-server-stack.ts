@@ -6,8 +6,24 @@ import { RemovalPolicy } from 'aws-cdk-lib';
 import { UnityLicenseServer } from './construct/unity-license-server';
 
 interface UnityLicenseServerStackProps extends cdk.StackProps {
+  /**
+   * The id for the AMI of your Unity license server.
+   * Set this after you created an AMI with unity-license-server-ami-stack.
+   * @default no license server is deployed
+   */
   readonly licenseServerAmiId?: string;
+
+  /**
+   * The VPC id you want to deploy the license server.
+   * @default A new VPC is created
+   */
   readonly vpcId?: string;
+
+  /**
+   * Set this false to allow CloudFormation to delete or replace the ENI.
+   * @default your ENI will not be replaced or removed on deployment to prevent accidental removal of the ENI assigned to your license.
+   */
+  readonly retainEni?: boolean;
 }
 
 export class UnityLicenseServerStack extends cdk.Stack {
@@ -56,7 +72,11 @@ export class UnityLicenseServerStack extends cdk.Stack {
         },
       ],
     });
-    eni.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    if (props.retainEni ?? true) {
+      eni.applyRemovalPolicy(RemovalPolicy.RETAIN);
+    } else {
+      eni.applyRemovalPolicy(RemovalPolicy.DESTROY);
+    }
 
     const bucket = new s3.Bucket(this, 'Bucket', {
       removalPolicy: RemovalPolicy.DESTROY,

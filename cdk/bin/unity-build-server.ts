@@ -20,6 +20,8 @@ const serverStack = new UnityLicenseServerStack(app, 'UnityLicenseServerStack', 
 
   // Input AMI ID created from EC2 instance in UnityLicenseServerAmiStack
   // licenseServerAmiId: 'ami-04bad4b6a2ebfcb5f',
+
+  retainEni: true,
 });
 
 new UnityLicenseServerAmiStack(app, 'UnityLicenseServerAmiStack', {

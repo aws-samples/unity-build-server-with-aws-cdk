@@ -120,7 +120,23 @@ echo '{
 
 リソースを削除する際は、以下の手順に沿ってください。
 
-以下の CDK コマンドを実行してください:
+まずは ENI の removal policy を変更します。このために [`cdk/bin/unity-build-server.ts`](cdk/bin/unity-build-server.ts) を以下のように編集してください:
+
+```diff
+const serverStack = new UnityLicenseServerStack(app, 'UnityLicenseServerStack', {
+  env,
+-  retainEni: false,
++  retainEni: true,
+});
+```
+
+次にスタックをデプロイして変更を適用します:
+
+```
+npx cdk deploy UnityLicenseServerStack
+```
+
+デプロイが完了したら、以下のコマンドを実行してください:
 
 ```sh
 npx cdk destroy --all
@@ -130,7 +146,6 @@ npx cdk destroy --all
 
 * ライセンスサーバー AMI: `license-ami-stack` の手順内で作成した AMI を削除する場合は [こちらのページ](https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/deregister-ami.html) を参考にしてください。
 
-* ENI: ライセンスサーバーにアタッチする ENI は、 [こちらのページ](https://us-east-2.console.aws.amazon.com/ec2/home?region=us-east-2#NIC:) から当該の ENI を選択し、[アクション] → [削除] で削除できます。 (注: ENI を削除したのち、当該 ENI に紐づけられた Unity ライセンスはライセンスは使用できなくなります。誤削除を防止するため、ENI の removalPolicy を Retain に設定しています。)
 
 ## FAQ
 

@@ -41,6 +41,7 @@ npx cdk bootstrap
 ```
 
 ## Getting Started
+**NOTE**: If you want to deploy the system in your existing VPC, please edit [`cdk/bin/unity-build-server.ts`](cdk/bin/unity-build-server.ts) and set the VPC id.
 
 ### Deployment steps
 
@@ -67,6 +68,10 @@ When you need to test the license server, see also [How to test the license serv
 Unity licenses are associated with the MAC address of the server (primary ENI for EC2 instance) and it's impossible to move to other servers.
 In this sample, create an ENI and attach to the instance as a primary ENI.
 By reusing the ENI, licenses are kept valid during launch.
+
+**NOTE**: After assigning a license to an ENI, you cannot reassign your license to other ENI easily.
+Please make sure your configuration (VPC, subnets, etc...) are valid BEFORE you activate the license.
+If you want to make changes to those configuration, we recommend to set `retainEni` to `false` (in [`unity-build-server.ts`](cdk/bin/unity-build-server.ts)), which allows removal or replacement of the ENI resource.
 
 Manual operations are needed to register the server and activate licenses since interaction with [Unity ID Portal](https://id.unity.com/en/account/edit) is unavoidable.
 
@@ -258,14 +263,30 @@ When you launch Unity Editor with Batch Mode, the floating license is acquired a
 
 **Attention!: You can't use and recover Unity licenses assigned to the ENI in the stack by yourself after you delete it. You need to contact Unity support for recovery.**
 
-You need to delete the AMI manually created in the deployment.
-See also [User Guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/deregister-ami.html).
+First, you have to change the removal policy of your ENI. You can do this easily by editing [`cdk/bin/unity-build-server.ts`](cdk/bin/unity-build-server.ts) like the below:
 
-Run the command to delete all resources and stacks:
+```diff
+const serverStack = new UnityLicenseServerStack(app, 'UnityLicenseServerStack', {
+  env,
+-  retainEni: false,
++  retainEni: true,
+});
+```
+
+Then deploy the stack:
+
+```
+npx cdk deploy UnityLicenseServerStack
+```
+
+After the deployment, run the following command to delete all resources and stacks:
 
 ```sh
 npx cdk destroy --all
 ```
+
+You need to manually delete the AMI that was created in the deployment.
+See also [User Guide](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/deregister-ami.html).
 
 ## FAQ
 
