@@ -106,6 +106,49 @@ exports[`UnityLicenseServerStack test 1`] = `
     },
   },
   "Outputs": {
+    "ExportsOutputFnGetAttBucket83908E77Arn063C8555": {
+      "Export": {
+        "Name": "UnityLicenseServerStack:ExportsOutputFnGetAttBucket83908E77Arn063C8555",
+      },
+      "Value": {
+        "Fn::GetAtt": [
+          "Bucket83908E77",
+          "Arn",
+        ],
+      },
+    },
+    "ExportsOutputRefBucket83908E7781C90AC0": {
+      "Export": {
+        "Name": "UnityLicenseServerStack:ExportsOutputRefBucket83908E7781C90AC0",
+      },
+      "Value": {
+        "Ref": "Bucket83908E77",
+      },
+    },
+    "ExportsOutputRefLicenseServerEni1A07D6BD": {
+      "Export": {
+        "Name": "UnityLicenseServerStack:ExportsOutputRefLicenseServerEni1A07D6BD",
+      },
+      "Value": {
+        "Ref": "LicenseServerEni",
+      },
+    },
+    "ExportsOutputRefVpc8378EB38272D6E3A": {
+      "Export": {
+        "Name": "UnityLicenseServerStack:ExportsOutputRefVpc8378EB38272D6E3A",
+      },
+      "Value": {
+        "Ref": "Vpc8378EB38",
+      },
+    },
+    "ExportsOutputRefVpcPrivateSubnet1Subnet536B997AFD4CC940": {
+      "Export": {
+        "Name": "UnityLicenseServerStack:ExportsOutputRefVpcPrivateSubnet1Subnet536B997AFD4CC940",
+      },
+      "Value": {
+        "Ref": "VpcPrivateSubnet1Subnet536B997A",
+      },
+    },
     "S3BucketUrl": {
       "Value": {
         "Fn::Join": [
@@ -981,6 +1024,517 @@ exports[`UnityLicenseServerStack test 1`] = `
         },
       },
       "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`UnityLicenseServerStack test 2`] = `
+{
+  "Outputs": {
+    "AmiInstanceURL": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".console.aws.amazon.com/ec2/home#InstanceDetails:instanceId=",
+            {
+              "Ref": "Instance",
+            },
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+  },
+  "Resources": {
+    "Instance": {
+      "Properties": {
+        "LaunchTemplate": {
+          "LaunchTemplateId": {
+            "Ref": "LaunchTemplate04EC5460",
+          },
+          "Version": {
+            "Fn::GetAtt": [
+              "LaunchTemplate04EC5460",
+              "LatestVersionNumber",
+            ],
+          },
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "UnityLicenseServerAmiStack/Instance",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::Instance",
+    },
+    "LaunchTemplate04EC5460": {
+      "Properties": {
+        "LaunchTemplateData": {
+          "BlockDeviceMappings": [
+            {
+              "DeviceName": "/dev/xvda",
+              "Ebs": {
+                "Encrypted": true,
+                "VolumeSize": 100,
+              },
+            },
+          ],
+          "IamInstanceProfile": {
+            "Arn": {
+              "Fn::GetAtt": [
+                "LaunchTemplateProfile94AA77CE",
+                "Arn",
+              ],
+            },
+          },
+          "ImageId": {
+            "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter",
+          },
+          "InstanceType": "t3.small",
+          "NetworkInterfaces": [
+            {
+              "DeleteOnTermination": false,
+              "DeviceIndex": 0,
+              "NetworkInterfaceId": {
+                "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputRefLicenseServerEni1A07D6BD",
+              },
+            },
+          ],
+          "TagSpecifications": [
+            {
+              "ResourceType": "instance",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "UnityLicenseServerAmiStack/LaunchTemplate",
+                },
+              ],
+            },
+            {
+              "ResourceType": "volume",
+              "Tags": [
+                {
+                  "Key": "Name",
+                  "Value": "UnityLicenseServerAmiStack/LaunchTemplate",
+                },
+              ],
+            },
+          ],
+          "UserData": {
+            "Fn::Base64": "#cloud-config
+fqdn: unitylicenseserver.ec2.internal
+
+runcmd:
+  - |
+    #!/bin/bash
+    yum -y update
+    yum -y install jq
+",
+          },
+        },
+        "TagSpecifications": [
+          {
+            "ResourceType": "launch-template",
+            "Tags": [
+              {
+                "Key": "Name",
+                "Value": "UnityLicenseServerAmiStack/LaunchTemplate",
+              },
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::EC2::LaunchTemplate",
+    },
+    "LaunchTemplateProfile94AA77CE": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "Role1ABCC5F0",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "Ref47C32AF2": {
+      "Properties": {
+        "Type": "String",
+        "Value": {
+          "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputRefLicenseServerEni1A07D6BD",
+        },
+      },
+      "Type": "AWS::SSM::Parameter",
+    },
+    "Role1ABCC5F0": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AmazonSSMManagedInstanceCore",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "RoleDefaultPolicy5FFB7DAB": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputFnGetAttBucket83908E77Arn063C8555",
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputFnGetAttBucket83908E77Arn063C8555",
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "RoleDefaultPolicy5FFB7DAB",
+        "Roles": [
+          {
+            "Ref": "Role1ABCC5F0",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`UnityLicenseServerStack test 3`] = `
+{
+  "Outputs": {
+    "TestClientUrl": {
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "https://",
+            {
+              "Ref": "AWS::Region",
+            },
+            ".console.aws.amazon.com/ec2/home#InstanceDetails:instanceId=",
+            {
+              "Ref": "TestClientE2CB58CC",
+            },
+          ],
+        ],
+      },
+    },
+  },
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+  },
+  "Resources": {
+    "TestClientE2CB58CC": {
+      "DependsOn": [
+        "TestClientInstanceRoleDefaultPolicy399EC1CE",
+        "TestClientInstanceRoleF0778570",
+      ],
+      "Properties": {
+        "AvailabilityZone": {
+          "Fn::Select": [
+            0,
+            {
+              "Fn::GetAZs": "",
+            },
+          ],
+        },
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/xvda",
+            "Ebs": {
+              "Encrypted": true,
+              "VolumeSize": 100,
+            },
+          },
+        ],
+        "IamInstanceProfile": {
+          "Ref": "TestClientInstanceProfileF9C60143",
+        },
+        "ImageId": {
+          "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestamzn2amihvmx8664gp2C96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "InstanceType": "t3.small",
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "TestClientInstanceSecurityGroup94FF0EA5",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputRefVpcPrivateSubnet1Subnet536B997AFD4CC940",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "TestClientInstance",
+          },
+        ],
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash
+yum -y update
+sh -c 'echo -e "[unityhub]
+name=Unity Hub
+baseurl=https://hub.unity3d.com/linux/repos/rpm/stable
+enabled=1
+gpgcheck=1
+gpgkey=https://hub.unity3d.com/linux/repos/rpm/stable/repodata/repomd.xml.key
+repo_gpgcheck=1" > /etc/yum.repos.d/unityhub.repo'
+yum check-update
+yum -y install unityhub
+mkdir /usr/share/unity3d/config
+aws s3 cp s3://",
+                {
+                  "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputRefBucket83908E7781C90AC0",
+                },
+                "/services-config.json /usr/share/unity3d/config/",
+              ],
+            ],
+          },
+        },
+      },
+      "Type": "AWS::EC2::Instance",
+    },
+    "TestClientInstanceProfileF9C60143": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "TestClientInstanceRoleF0778570",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "TestClientInstanceRoleDefaultPolicy399EC1CE": {
+      "Properties": {
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputFnGetAttBucket83908E77Arn063C8555",
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputFnGetAttBucket83908E77Arn063C8555",
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "TestClientInstanceRoleDefaultPolicy399EC1CE",
+        "Roles": [
+          {
+            "Ref": "TestClientInstanceRoleF0778570",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "TestClientInstanceRoleF0778570": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/AmazonSSMManagedInstanceCore",
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "TestClientInstance",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "TestClientInstanceSecurityGroup94FF0EA5": {
+      "Properties": {
+        "GroupDescription": "UnityTestClientStack/TestClient/InstanceSecurityGroup",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "TestClientInstance",
+          },
+        ],
+        "VpcId": {
+          "Fn::ImportValue": "UnityLicenseServerStack:ExportsOutputRefVpc8378EB38272D6E3A",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
     },
   },
   "Rules": {
