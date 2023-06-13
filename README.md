@@ -8,6 +8,9 @@ This example helps you build a [Unity Build Server](https://unity.com/products/u
 
 ![Architecture](./img/architecture.png)
 
+Please also refer to this project to build Unity apps on AWS: [aws-samples/jenkins-unity-build-on-aws](https://github.com/aws-samples/jenkins-unity-build-on-aws).
+
+
 ## Modules
 
 This repository includes the following samples.
