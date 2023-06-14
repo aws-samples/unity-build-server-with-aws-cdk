@@ -406,7 +406,7 @@ exports[`UnityLicenseServerStack test 1`] = `
           "DestinationBucketName": {
             "Ref": "LogBucketCC3B17E8",
           },
-          "LogFilePrefix": "license-server-bucket-access-logs",
+          "LogFilePrefix": "license-server-bucket-access-logs/",
         },
         "PublicAccessBlockConfiguration": {
           "BlockPublicAcls": true,

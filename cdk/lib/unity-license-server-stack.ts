@@ -85,7 +85,7 @@ export class UnityLicenseServerStack extends cdk.Stack {
       versioned: true,
       enforceSSL: true,
       serverAccessLogsBucket: logBucket,
-      serverAccessLogsPrefix: 'license-server-bucket-access-logs',
+      serverAccessLogsPrefix: 'license-server-bucket-access-logs/',
       blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
     });
 
