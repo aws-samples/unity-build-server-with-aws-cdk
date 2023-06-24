@@ -28,6 +28,7 @@ export class UnityTestClientStack extends cdk.Stack {
           volume: ec2.BlockDeviceVolume.ebs(100, { encrypted: true }),
         },
       ],
+      ssmSessionPermissions: true,
     });
 
     instance.userData.addCommands(
@@ -40,7 +41,6 @@ export class UnityTestClientStack extends cdk.Stack {
       'aws s3 cp ' + bucket.s3UrlForObject('services-config.json') + ' /usr/share/unity3d/config/',
     );
 
-    instance.role.addManagedPolicy(iam.ManagedPolicy.fromAwsManagedPolicyName('AmazonSSMManagedInstanceCore'));
     // Necessary to download server-config.json
     bucket.grantRead(instance.role);
 
