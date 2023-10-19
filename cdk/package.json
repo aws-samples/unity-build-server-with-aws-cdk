@@ -1,5 +1,5 @@
 {
-  "name": "unity-build-server",
+  "name": "@aws-samples/unity-build-server",
   "version": "0.1.0",
   "bin": {
     "unity-build-server": "bin/unity-build-server.js"
