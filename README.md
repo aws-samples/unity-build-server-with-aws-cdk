@@ -76,7 +76,7 @@ By reusing the ENI, licenses are kept valid during launch.
 Please make sure your configuration (VPC, subnets, etc...) are valid BEFORE you activate the license.
 If you want to make changes to those configuration, we recommend to set `retainEni` to `false` (in [`unity-build-server.ts`](cdk/bin/unity-build-server.ts)), which allows removal or replacement of the ENI resource.
 
-Manual operations are needed to register the server and activate licenses since interaction with [Unity ID Portal](https://id.unity.com/en/account/edit) is unavoidable.
+Manual operations are needed to register the server and activate licenses since interaction with [Unity ID Portal](https://id.unity.com/en/account/edit) is unavoidable. Here is the summarized version to setup a license server. Please also look at [the Unity official document](https://docs.unity3d.com/licensing/manual/ServerSetup-dl.html) for the latest instructions.
 
 1. Upload the binary file (`Unity.Licensing.Server.linux-x64-{version}.zip`) downloaded from [Unity ID Portal](https://id.unity.com/en/account/edit) to the S3 Bucket (`Bucket` in `UnityLicenseServerStack`, The URL is displayed after `cdk deploy`)
     * Uploading from [AWS Management Console](https://s3.console.aws.amazon.com/s3/buckets) is recommended
@@ -96,8 +96,11 @@ Manual operations are needed to register the server and activate licenses since 
     * Access to the instance (the URL is displayed after `cdk deploy`) in the stack via SSM and run the commands below:
 
     ```sh
+    # register a license as a root user
+    sudo su
+    cd ~
     pwd
-    # > /home/ssm-user
+    # > /root
 
     # Input the S3 Bucket name in UnityLicenseServerStack
     BUCKET_NAME='unitylicenseserverstack-bucket-xxxxxxx'
@@ -133,6 +136,9 @@ Manual operations are needed to register the server and activate licenses since 
 5. Connect to the instance via SSM again and run the commands below (Please read [the guide](https://docs.unity3d.com/licensing/manual/QuickStartWeb.html) for more detailed information)
 
     ```sh
+    sudo su
+    cd ~
+
     # Input the S3 Bucket name in UnityLicenseServerStack
     BUCKET_NAME='sample-bucket-name'
     # Input the license zip file name uploaded to the S3 Bucket
