@@ -78,7 +78,7 @@ If you want to make changes to those configuration, we recommend to set `retainE
 
 Manual operations are needed to register the server and activate licenses since interaction with [Unity ID Portal](https://id.unity.com/en/account/edit) is unavoidable. Here is the summarized version to setup a license server. Please also look at [the Unity official document](https://docs.unity3d.com/licensing/manual/ServerSetup-dl.html) for the latest instructions.
 
-1. Upload the binary file (`Unity.Licensing.Server.linux-x64-{version}.zip`) downloaded from [Unity ID Portal](https://id.unity.com/en/account/edit) to the S3 Bucket (`Bucket` in `UnityLicenseServerStack`, The URL is displayed after `cdk deploy`)
+1. Upload the binary file (`Unity.Licensing.Server.linux-x64-{version}.zip`) downloaded from [Unity ID Portal](https://id.unity.com/en/account/edit) to the S3 Bucket in `UnityLicenseServerStack`. The URL to access the S3 bucket is displayed after `cdk deploy`.
     * Uploading from [AWS Management Console](https://s3.console.aws.amazon.com/s3/buckets) is recommended
     * Command example to upload with CLI:
 

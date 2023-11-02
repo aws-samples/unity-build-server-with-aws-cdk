@@ -21,10 +21,9 @@ AMI 作成に前もって、以下の条件が満たされていることを確�
 
 ## 手順
 
-以下の手順を実行することでライセンスサーバーの AMI が作成されます。
-明示しない限り、以下のコマンドは ssm-user のホームディレクトリで実行してください。
+以下の手順を実行することでライセンスサーバーの AMI が作成されます。もし手順どおりに実行してもうまく行かない場合、手順が古い可能性があります。[公式のUnityドキュメント](https://docs.unity3d.com/licensing/manual/ServerSetup-dl.html)もご参照ください。
 
-1. 共通リソースの S3 Bucket (`UnityLicenseServerStack` の `Bucket`、以下同様) に [UnityID Portal](https://id.unity.com/en/account/edit) からダウンロードしたバイナリ (`Unity.Licensing.Server.linux-x64-{version}.zip`) を配置します
+1. 共通リソースの S3 Bucket (`UnityLicenseServerStack` の `Bucket`。CDKデプロイ後にS3マネジメントコンソールへのURLが出力されます。) に [UnityID Portal](https://id.unity.com/en/account/edit) からダウンロードしたバイナリ (`Unity.Licensing.Server.linux-x64-{version}.zip`) を配置します
     * [マネジメントコンソール](https://s3.console.aws.amazon.com/s3/buckets?region=us-east-1) からのアップロードを推奨します
     * 手元で CLI 経由でアップロードする場合のコマンド例: `aws s3 cp ./Unity.Licensing.Server.linux-x64-v1.11.0.zip s3://unitylicenseserverstack-bucket-xxxxxxx/`
 
@@ -34,8 +33,11 @@ AMI 作成に前もって、以下の条件が満たされていることを確�
     * 雛形インスタンスにセッションマネージャー経由で接続し、以下のコマンドを順に実行します (接続方法については後述)
 
     ```sh
+    # rootユーザーでライセンス登録を実施します
+    sudo su
+    cd ~
     pwd
-    # > /home/ssm-user
+    # > /root
 
     # 共通リソースで作成された S3 Bucket 名をここで代入してください
     BUCKET_NAME='unitylicenseserverstack-bucket-xxxxxxx'
@@ -72,6 +74,9 @@ AMI 作成に前もって、以下の条件が満たされていることを確�
 5. 再度雛形インスタンスにセッションマネージャー経由で接続し、以下のコマンドを順に実行します (詳細は [ガイド](https://forpro.unity3d.jp/tutorial/unity-build-server%E3%82%AF%E3%82%A4%E3%83%83%E3%82%AF%E3%82%B9%E3%82%BF%E3%83%BC%E3%83%88%E3%82%AC%E3%82%A4%E3%83%89/) を参照してください)
 
     ```sh
+    sudo su
+    cd ~
+
     # 共通リソースで作成された S3 Bucket 名をここで代入してください
     BUCKET_NAME='sample-bucket-name'
     # S3 Bucket にアップロードしたライセンスアーカイブのファイル名をここで代入してください
@@ -158,3 +163,5 @@ EC2 インスタンスへセッションマネージャー経由で接続する�
 AMI 作成が完了した後は、以下の作業をおこなってください。
 
 * AMI を利用したライセンスサーバーの起動
+
+詳細は再度 [デプロイ手順書](./deployment_ja.md) をご覧ください。
