@@ -61,9 +61,12 @@ export class UnityLicenseServerStack extends cdk.Stack {
       allowAllOutbound: true,
     });
     eniSecurityGroup.connections.allowFrom(ec2.Peer.ipv4(vpc.vpcCidrBlock), ec2.Port.tcp(8080), 'Allow TCP 8080');
+    
+    // Set the CIDR as narrow as possible
+    eniSecurityGroup.connections.allowFrom(ec2.Peer.ipv4("0.0.0.0/0"), ec2.Port.tcp(8080), 'Allow TCP 8080');
 
     const eni = new ec2.CfnNetworkInterface(this, 'LicenseServerEni', {
-      subnetId: vpc.privateSubnets[0].subnetId,
+      subnetId: vpc.publicSubnets[0].subnetId,
       groupSet: [eniSecurityGroup.securityGroupId],
       tags: [
         {
