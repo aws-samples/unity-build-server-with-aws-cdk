@@ -2,6 +2,10 @@
 
 [View this page in Japanese (日本語版)](./docs/deployment_ja.md)
 
+
+> [!WARNING]  
+> To try this sample, we recommend using a **trial version** of the Unity Build server license. If a license server is deleted, the license will be revoked, and you will need to contact Unity support to recover it.
+
 ## Overview
 
 This example helps you build a [Unity Build Server](https://unity.com/products/unity-build-server) (License server) for floating licenses with AWS CDK.
@@ -270,7 +274,8 @@ When you launch Unity Editor with Batch Mode, the floating license is acquired a
 
 ## Clean Up
 
-**Attention!: You can't use and recover Unity licenses assigned to the ENI in the stack by yourself after you delete it. You need to contact Unity support for recovery.**
+> [!WARNING]  
+> **You can't use and recover Unity licenses assigned to the ENI in the stack by yourself after you delete it. You need to contact Unity support for recovery.**
 
 First, you have to change the removal policy of your ENI. You can do this easily by editing [`cdk/bin/unity-build-server.ts`](cdk/bin/unity-build-server.ts) like the below:
 
