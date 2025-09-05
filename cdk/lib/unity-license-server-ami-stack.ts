@@ -28,7 +28,7 @@ export class UnityLicenseServerAmiStack extends cdk.Stack {
     const launchTemplate = new ec2.LaunchTemplate(this, 'LaunchTemplate', {
       instanceType: new ec2.InstanceType('t3.small'),
       machineImage: new ec2.AmazonLinuxImage({
-        generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
+        generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2023,
       }),
       role,
       blockDevices: [
